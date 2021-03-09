@@ -6,9 +6,9 @@ const bodyparser = require('body-parser');
 //const { getName } = require('country-list');
 
 const mongodbclient = require('mongodb');
-//dburl = "mongodb://localhost:27017/"
+dburl = "mongodb://localhost:27017/"
 
-dburl="mongodb+srv://anto:anto@cluster0.tpfkd.mongodb.net/creatorsincdb?retryWrites=true&w=majority"
+//dburl="mongodb+srv://anto:anto@cluster0.tpfkd.mongodb.net/creatorsincdb?retryWrites=true&w=majority"
 
 //const geoip = require('geoip-lite');
 
@@ -139,7 +139,37 @@ app.post('/startvisit',function(req,res){
 
 })
 
-app.listen(process.env.PORT, function () {
+app.post('/getalldata',function(req,res){
+    console.log(req.body)
+   
+
+    mongodbclient.connect(dburl, function (err, client) {
+        if (err) throw err;
+        var db = client.db(creatorsincdb);
+        let finddata = { creatorsinckey: "creatorsinc" }
+
+        // let updatedata = {
+        //     $inc: { "formvisitcount":+1},
+        //     $setOnInsert: finddata,
+
+        // }
+ 
+            db.collection(creatorsinccollection).findOne(finddata, function (err, data) {
+                if (err) throw err;
+                client.close();
+                res.json({
+                    message: "saved",
+                    data:data
+                    
+            })
+
+    });
+
+})
+
+})
+//process.env.PORT
+app.listen(4123, function () {
 
     console.log("listening on port 4123");
 });
